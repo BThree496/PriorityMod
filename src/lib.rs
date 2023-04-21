@@ -148,13 +148,13 @@ fn parse_affinity_mask(affinity: Option<&str>) -> usize {
                 "auto" => {
                     let num_cores = num_cpus::get_physical();
                     let num_logical_processors = num_cpus::get();
-                    let mask_smt = get_mask_smt_first_processors();
+                    let mask_smt_first_processors = get_mask_smt_first_processors();
                     let mask_cpu0 = get_mask_cpu0();
                     return unsafe {
                         calc_best_affinity(
                             num_cores,
                             num_logical_processors,
-                            mask_smt,
+                            mask_smt_first_processors,
                             mask_cpu0,
                             DISABLE_CPU0,
                             DISABLE_SMT,
