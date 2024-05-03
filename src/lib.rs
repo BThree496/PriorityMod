@@ -4,26 +4,29 @@ use std::slice;
 use std::str::FromStr;
 
 use affinity_helper::{calc_best_affinity, get_mask_cpu0, get_mask_smt_first_processors};
+use dynamic_priority::init_dynamic_priority;
 use ini::Properties;
 use windows::Win32::Foundation::{HANDLE, HINSTANCE};
 use windows::Win32::System::LibraryLoader::GetModuleFileNameW;
 use windows::Win32::System::Threading::{
-    GetCurrentProcess, SetPriorityClass, SetProcessAffinityMask, ABOVE_NORMAL_PRIORITY_CLASS,
-    BELOW_NORMAL_PRIORITY_CLASS, HIGH_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS,
-    PROCESS_CREATION_FLAGS, REALTIME_PRIORITY_CLASS,
+    GetCurrentProcess, GetCurrentProcessId, SetPriorityClass, SetProcessAffinityMask,
+    ABOVE_NORMAL_PRIORITY_CLASS, BELOW_NORMAL_PRIORITY_CLASS, HIGH_PRIORITY_CLASS,
+    IDLE_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS, PROCESS_CREATION_FLAGS, REALTIME_PRIORITY_CLASS,
 };
 
 pub mod affinity_helper;
+mod dynamic_priority;
 mod games;
 
-static mut ENABLED: bool = true;
-static mut PRIORITY: PROCESS_CREATION_FLAGS = HIGH_PRIORITY_CLASS;
-static mut AFFINITY: usize = 0;
-static mut DISABLE_CPU0: bool = true;
-static mut DISABLE_SMT: bool = false;
-static mut MIN_THREADS: u32 = 6;
+pub static mut ENABLED: bool = true;
+pub static mut PRIORITY: PROCESS_CREATION_FLAGS = HIGH_PRIORITY_CLASS;
+pub static mut AFFINITY: usize = 0;
+pub static mut DISABLE_CPU0: bool = true;
+pub static mut DISABLE_SMT: bool = false;
+pub static mut MIN_THREADS: u32 = 6;
 
 static mut CURRENT_PROCESS_HANDLE: HANDLE = HANDLE(0);
+static mut CURRENT_PROCESS_HANDLE_ID: u32 = 0;
 
 #[no_mangle]
 pub extern "system" fn DllMain(
@@ -32,7 +35,10 @@ pub extern "system" fn DllMain(
     #[allow(non_snake_case)] _lpvReserved: isize,
 ) -> i32 {
     if fdwReason == 1 {
-        unsafe { CURRENT_PROCESS_HANDLE = GetCurrentProcess() };
+        unsafe {
+            CURRENT_PROCESS_HANDLE = GetCurrentProcess();
+            CURRENT_PROCESS_HANDLE_ID = GetCurrentProcessId();
+        }
         let lib_path: [u16; 1024] = [0; 1024];
         let lib_path_len = unsafe {
             let u8slice: &mut [u16] =
@@ -61,13 +67,18 @@ pub extern "system" fn DllMain(
                 PRIORITY = parse_priority_class(ini_section.get("priority"));
                 AFFINITY = parse_affinity_mask(ini_section.get("affinity"));
             }
+            // Load the dynamic priority configuration
+            // And run dynamic priority if it's enabled
+            init_dynamic_priority(&ini_file)
         } else {
             // If the ini not exists.
             // Use the default value in global variable.
         }
         unsafe {
-            SetPriorityClass(CURRENT_PROCESS_HANDLE, PRIORITY).expect("Failed to set process priority");
-            SetProcessAffinityMask(CURRENT_PROCESS_HANDLE, AFFINITY).expect("Failed to set process affinity");
+            SetPriorityClass(CURRENT_PROCESS_HANDLE, PRIORITY)
+                .expect("Failed to set process priority");
+            SetProcessAffinityMask(CURRENT_PROCESS_HANDLE, AFFINITY)
+                .expect("Failed to set process affinity");
 
             // Debug
             report_debug(
