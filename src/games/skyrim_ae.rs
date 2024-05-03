@@ -29,6 +29,7 @@ pub struct SKSEPluginVersionData {
     pub seVersionRequired: u32,
 }
 
+#[allow(dead_code)]
 impl SKSEPluginVersionData {
     pub const VERSION: u32 = 1;
 

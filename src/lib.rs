@@ -66,8 +66,8 @@ pub extern "system" fn DllMain(
             // Use the default value in global variable.
         }
         unsafe {
-            SetPriorityClass(CURRENT_PROCESS_HANDLE, PRIORITY);
-            SetProcessAffinityMask(CURRENT_PROCESS_HANDLE, AFFINITY);
+            SetPriorityClass(CURRENT_PROCESS_HANDLE, PRIORITY).expect("Failed to set process priority");
+            SetProcessAffinityMask(CURRENT_PROCESS_HANDLE, AFFINITY).expect("Failed to set process affinity");
 
             // Debug
             report_debug(

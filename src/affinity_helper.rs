@@ -41,11 +41,14 @@ pub fn get_mask_smt_first_processors() -> usize {
 
     // Get length and create buffer
     let mut len = 0;
-    unsafe { GetLogicalProcessorInformationEx(RelationProcessorCore, Some(null_mut()), &mut len) };
+    let _ = unsafe {
+        GetLogicalProcessorInformationEx(RelationProcessorCore, Some(null_mut()), &mut len)
+    };
     let mut buffer = vec![0u8; len as usize];
 
     let info = buffer.as_mut_ptr() as *mut SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
-    unsafe { GetLogicalProcessorInformationEx(RelationProcessorCore, Some(info), &mut len) };
+    let _ =
+        unsafe { GetLogicalProcessorInformationEx(RelationProcessorCore, Some(info), &mut len) };
 
     let mut current = info;
     while (current as usize) < (info as usize) + (len as usize) {
@@ -64,11 +67,14 @@ pub fn get_mask_smt_first_processors() -> usize {
 pub fn get_mask_cpu0() -> usize {
     // Get length and create buffer
     let mut len = 0;
-    unsafe { GetLogicalProcessorInformationEx(RelationProcessorCore, Some(null_mut()), &mut len) };
+    let _ = unsafe {
+        GetLogicalProcessorInformationEx(RelationProcessorCore, Some(null_mut()), &mut len)
+    };
     let mut buffer = vec![0u8; len as usize];
 
     let info = buffer.as_mut_ptr() as *mut SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
-    unsafe { GetLogicalProcessorInformationEx(RelationProcessorCore, Some(info), &mut len) };
+    let _ =
+        unsafe { GetLogicalProcessorInformationEx(RelationProcessorCore, Some(info), &mut len) };
 
     let mut current = info;
     while (current as usize) < (info as usize) + (len as usize) {

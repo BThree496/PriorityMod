@@ -30,6 +30,7 @@ pub struct F4SEPluginVersionData {
     pub reserved: [u8; 512],      // set to 0
 }
 
+#[allow(dead_code)]
 impl F4SEPluginVersionData {
     pub const VERSION: u32 = 1;
 
