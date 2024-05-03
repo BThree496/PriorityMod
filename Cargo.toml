@@ -1,6 +1,6 @@
 [package]
 name = "fallrim_priority"
-version = "4.0.0"
+version = "4.0.1"
 edition = "2021"
 
 [lib]
@@ -14,14 +14,14 @@ skyrim_ae = []
 fallout_4 = []
 
 [dependencies]
-rust-ini = "0.18.0"
+rust-ini = "0.21.0"
 msgbox = "0.7.0"
 num_cpus = "1.15.0"
-raw-cpuid = "10.7.0"
+raw-cpuid = "11.0.2"
 paste = "1.0.12"
 
 [dependencies.windows]
-version = "0.44.0"
+version = "0.56.0"
 features = [
     "Data_Xml_Dom",
     "Win32_Foundation",
