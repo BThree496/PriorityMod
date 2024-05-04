@@ -23,15 +23,12 @@ pub fn calc_best_affinity(
     };
 
     if disable_cpu0 {
-        result &= !mask_cpu0;
+        result = bitand_ensure_min_threads(result, !mask_cpu0, min_threads);
     }
 
     if smt_enabled && disable_smt {
-        result &= mask_smt_first_processors;
+        result = bitand_ensure_min_threads(result, mask_smt_first_processors, min_threads);
     }
-
-    // TODO: Implement min_threads
-    if min_threads > 0 {}
 
     return result;
 }
@@ -87,4 +84,12 @@ pub fn get_mask_cpu0() -> usize {
         current = ((current as usize) + unsafe { (*current).Size as usize }) as *mut _;
     }
     return 1;
+}
+
+pub fn bitand_ensure_min_threads(value: usize, mask: usize, min_threads: u32) -> usize {
+    let result = value & mask;
+    match result.count_ones() >= min_threads {
+        true => result,
+        false => value,
+    }
 }
