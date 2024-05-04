@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  debug-build-test:
+  debug-build:
     runs-on: windows-latest
 
     steps:
@@ -28,6 +28,21 @@ jobs:
       run: cargo test --verbose
 
   release-build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install latest nightly
+      uses: actions-rs/toolchain@v1
+      with:
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+          
+    - name: Release build
+      run: cargo build -r --features skyrim_ae,fallout_4
+
+  build-script:
     runs-on: windows-latest
 
     steps:
