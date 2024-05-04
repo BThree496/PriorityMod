@@ -15,6 +15,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Install latest nightly
+      uses: actions-rs/toolchain@v1
+      with:
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+    
     - name: Debug build
       run: cargo build --verbose
     - name: Run tests
@@ -25,5 +32,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Install latest nightly
+      uses: actions-rs/toolchain@v1
+      with:
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+          
     - name: Run build script
       run: python ./pack.py
