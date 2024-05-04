@@ -19,11 +19,11 @@ mod dynamic_priority;
 mod games;
 
 pub static mut ENABLED: bool = true;
-pub static mut PRIORITY: PROCESS_CREATION_FLAGS = HIGH_PRIORITY_CLASS;
+pub static mut PRIORITY: PROCESS_CREATION_FLAGS = ABOVE_NORMAL_PRIORITY_CLASS;
 pub static mut AFFINITY: usize = 0;
 pub static mut DISABLE_CPU0: bool = true;
 pub static mut DISABLE_SMT: bool = false;
-pub static mut MIN_THREADS: u32 = 6;
+pub static mut MIN_THREADS: u32 = 12;
 
 static mut CURRENT_PROCESS_HANDLE: HANDLE = HANDLE(0);
 static mut CURRENT_PROCESS_HANDLE_ID: u32 = 0;
