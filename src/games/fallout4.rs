@@ -44,7 +44,7 @@ impl F4SEPluginVersionData {
 #[no_mangle]
 pub static F4SEPlugin_Version: F4SEPluginVersionData = F4SEPluginVersionData {
     dataVersion: F4SEPluginVersionData::VERSION,
-    pluginVersion: 3,
+    pluginVersion: 4,
     name: *concat_bytes!(b"Fallout Priority", [0u8; 240]),
     author: *concat_bytes!(b"Boring3", [0u8; 249]),
     addressIndependence: F4SEPluginVersionData::ADDRESS_INDEPENDENCE_SIGNATURES,

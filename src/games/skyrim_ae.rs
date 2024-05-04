@@ -43,7 +43,7 @@ impl SKSEPluginVersionData {
 #[no_mangle]
 pub static SKSE_PLUGIN_VERSION: SKSEPluginVersionData = SKSEPluginVersionData {
     dataVersion: 1,
-    pluginVersion: 3,
+    pluginVersion: 4,
     name: *concat_bytes!(b"Skyrim Priority", [0u8; 241]),
     author: *concat_bytes!(b"Boring3", [0u8; 249]),
     supportEmail: [0; 252],
