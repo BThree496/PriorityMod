@@ -6,8 +6,8 @@ import threading
 compile_cmd = "cargo build -r --features \"{flag}\" --target-dir \"./tmp/{game_name}\""
 # Define the targets array
 targets = [
-    ["Skyrim AE", "x86_64-pc-windows-msvc", "skyrim_ae"],
-    ["Fallout 4", "x86_64-pc-windows-msvc", "fallout_4"]
+    ["Skyrim Priority AE", "x86_64-pc-windows-msvc", "skyrim_ae", "/Data/SKSE/Plugins"],
+    ["Fallout Priority NG", "x86_64-pc-windows-msvc", "fallout_4", "/Data/F4SE/Plugins"]
 ]
 
 # Create "./tmp" and "./out" folders
@@ -20,7 +20,7 @@ if not os.path.exists("./out"):
 
 
 def compile_target(target):
-    game_name, arch, flag = target
+    game_name, arch, flag, zip_nested_dir = target
     cmd = compile_cmd.format(game_name=game_name, flag=flag)
     os.system(cmd)
 
@@ -40,16 +40,17 @@ for thread in threads:
 
 def process_target(target):
     game_name = target[0]
+    zip_nested_dir = target[3]
     out_dir = f"./out/{game_name}"
     tmp_dir = f"./tmp/{game_name}"
 
     # Create the output directory
-    os.makedirs(out_dir, exist_ok=True)
-
+    os.makedirs(f"{out_dir}{zip_nested_dir}", exist_ok=True)
+    
     # Copy files
     shutil.copy(f"{tmp_dir}/release/FallrimPriority.dll",
-                f"{out_dir}/FallrimPriority.dll")
-    shutil.copy("./FallrimPriority.ini", f"{out_dir}/FallrimPriority.ini")
+                f"{out_dir}{zip_nested_dir}/FallrimPriority.dll")
+    shutil.copy("./FallrimPriority.ini", f"{out_dir}{zip_nested_dir}/FallrimPriority.ini")
 
     # Compress the directory
     shutil.make_archive(out_dir, "zip", root_dir=out_dir)
