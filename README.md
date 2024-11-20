@@ -7,6 +7,12 @@ Kick other processes out. Skyrim/Fallout is the only one who should have the who
 > The 'next' branch is used to host the code for version 4.x (rewritten in Rust).  
 > You can find 3.x version on the 'main' branch.
 
+## Features
+1. Dynamic Priority Adjustment based on player behavior
+2. CPU-0 schedule optimization to avoid competition with system kernel tasks
+3. SMT hyper-threading optimization
+
+
 ## Supported Games
 - Skyrim SE/VR/AE  
 - Fallout 4/VR  
